@@ -15,7 +15,7 @@ function Board() {
   return (
     <div>
       <h1>Grid here</h1>
-      {grid.map()}
+      {grid.map((rows) => rows.map())}
     </div>
   )
 }
