@@ -10,12 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "immer": "^7.0.9",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0"
   },
   "babel": {
-    "presets":[
+    "presets": [
       "@babel/preset-env",
       "@babel/preset-react"
     ]

@@ -13,11 +13,18 @@ function Board() {
   })
   console.log(grid);
   return (
-    <div>
-      <h1>Grid here</h1>
-      {grid.map((rows) => rows.map())}
+    <div className="grid-show">
+      {grid.map((rows, rowIndex) => 
+        rows.map((column, columnIndex) =>{
+          return <div 
+            
+            key={`${rowIndex}-${columnIndex}`}
+            style={{width:20, height:20, backgroundColor: grid[rowIndex][columnIndex] ? 'black' : undefined, border: '1px solid gray'}}
+
+          />
+      }))}
     </div>
   )
-}
+};
 
 export default Board
