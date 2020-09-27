@@ -1,10 +1,23 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import Select from 'react-select';
 import produce from 'immer';
 
+const timeOptions = [
+  { value: '200', label: '200' },
+  { value: '300', label: '300' },
+  { value: '400', label: '400' },
+  { value: '500', label: '500' },
+  { value: '600', label: '600' },
+  { value: '700', label: '700' },
+  { value: '800', label: '800' },
+  { value: '900', label: '900' },
+  { value: '1000', label:'1000' },
+  { value: '5000', label:'5000' },
+];
 
 function Board() { 
   const [running, setRunning] = useState(false);
-  const [time, setTime] = useState(500);
+  const [time, setTime] = useState(200);
   const [numberOfRows, setNumberOfRows] = useState(25);
   const [numberOfColumns, setNumberOfColumns] = useState(25);
   const operations = [
@@ -63,13 +76,30 @@ function Board() {
         }
       });
     });
-    
-    setTimeout(runSimulation, time)
-  },[numberOfRows, numberOfColumns, time]);
+    console.log('time>>>>>>>>>>>>>',time, typeof(time));
+    setTimeout(runSimulation, parseInt(time))
+  },[numberOfRows, numberOfColumns,time]);
+
+
+
+  const handleTime = (time) => {
+    setTime(parseInt(time.value));
+    console.log(`Option selected:`, time.value);
+  };
 
   console.log('Before click', running);
+  console.log('time or speed', time);
   return (
     <div className="container">
+      <div className="select-options">
+        <Select
+          value={parseInt(time)}
+          defaultValue={timeOptions[2]}
+          label="choose speed"
+          onChange={handleTime}
+          options={timeOptions}
+        />
+      </div>
       <div className="buttons-container">
         <h1>Game of Life</h1>
         <button onClick={() => {

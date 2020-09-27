@@ -44,3 +44,7 @@ button {
   align-items: center;
   margin: 0px auto;
 }
+
+.select-options {
+  width: 220px;
+}
