@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useRef } from 'react';
 import produce from 'immer';
 
-const numberOfRows = 25;
-const numberOfColumns = 25;
-
 
 function Board() { 
   const [running, setRunning] = useState(false);
+  const [time, setTime] = useState(500);
+  const [numberOfRows, setNumberOfRows] = useState(25);
+  const [numberOfColumns, setNumberOfColumns] = useState(25);
   const operations = [
     [0,1],
     [0,-1],
@@ -64,8 +64,8 @@ function Board() {
       });
     });
     
-    setTimeout(runSimulation, 500)
-  },[numberOfRows, numberOfColumns]);
+    setTimeout(runSimulation, time)
+  },[numberOfRows, numberOfColumns, time]);
 
   console.log('Before click', running);
   return (
