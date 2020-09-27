@@ -3,27 +3,38 @@ import produce from 'immer';
 
 const numberOfRows = 25;
 const numberOfColumns = 25;
-const operations = [
-  [0,1],
-  [0,-1],
-  [1,-1],
-  [-1,1],
-  [1,1],
-  [-1,-1],
-  [1,0],
-  [-1,0]
-];
 
-function Board() {
+
+function Board() { 
+  const operations = [
+    [0,1],
+    [0,-1],
+    [1,-1],
+    [-1,1],
+    [1,1],
+    [-1,-1],
+    [1,0],
+    [-1,0]
+  ];
+  
+  const generateEmptyGrid = () => {
+    const rows = [];
+    for(let i=0; i<numberOfRows; i++) {
+       rows.push(Array.from(Array(numberOfColumns), () => 0));
+    }
+    return rows;
+  }
+  
+  const getRandom = () => {
+    const rows = [];
+    for(let i=0; i<numberOfRows; i++) {
+       rows.push(Array.from(Array(numberOfColumns), () => (Math.random() > 0.65 ? 1 : 0)))
+    };
+    setGrid(rows);
+  }
+  const [grid, setGrid ] = useState(() => generateEmptyGrid());
   const [running, setRunning] = useState(false);
   const runningRef = useRef(running);
-  const [grid, setGrid ] = useState(() => {
-     const rows = [];
-     for(let i=0; i<numberOfRows; i++) {
-        rows.push(Array.from(Array(numberOfColumns), () => 0));
-     }
-     return rows;
-  })
   const runSimulation = useCallback(() =>{
     // if we are not running return 
     if(!runningRef.current) {
@@ -32,26 +43,26 @@ function Board() {
     setGrid((g) => {
       return produce(g, gridCopy => {
         for(let i=0; i<numberOfRows; i++) {
-          for(let j=0; j<numberOfColumns; j++) {
+          for(let k=0; k<numberOfColumns; k++) {
             let neighbors = 0;
             operations.forEach(([x,y]) => {
                 const newI = i+x;
-                const newJ = j+y;
-                if(newI >= 0 && newI < numberOfRows && newJ>=0 && newJ < numberOfColumns) {
-                      neighbors += g[newI][newJ]
+                const newK = k+y;
+                if(newI >= 0 && newI < numberOfRows && newK>=0 && newK < numberOfColumns) {
+                      neighbors += g[newI][newK]
                 }
             });
             if(neighbors < 2 || neighbors > 3) {
-              gridCopy[i][j] = 0;
-            }else if(g[i][j] === 0 && neighbors === 3) {
-              gridCopy[i][j] = 1;
+              gridCopy[i][k] = 0;
+            }else if(g[i][k] === 0 && neighbors === 3) {
+              gridCopy[i][k] = 1;
             }
           }
         }
       });
     });
     
-    setTimeout(runSimulation, 1000)
+    setTimeout(runSimulation, 100)
   },[]);
 
   console.log(grid);
@@ -59,10 +70,19 @@ function Board() {
     <div className="container">
       <div className="buttons-container">
         <h1>Game of Life</h1>
-        <button onClick={() => setRunning(!running)}>{running ? 'Stop': 'Start'}</button>
+        <button onClick={() => {
+           setRunning(!running);
+           if(!running) {
+            runningRef.current = true;
+            runSimulation();
+           }
+           }}
+        >{running ? 'Stop': 'Start'}</button>
         <button>Stop</button>
-        <button>Random</button>
-        <button>Clear</button>
+        <button onClick={() => getRandom()}>Random</button>
+        <button onClick={() => {
+             setGrid(generateEmptyGrid());
+        }}>Clear</button>
       </div>
       <div className="grid-show">
         {grid.map((rows, rowIndex) => 
