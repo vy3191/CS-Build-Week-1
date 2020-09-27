@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import produce from 'immer';
 
 const numberOfRows = 25;
 const numberOfColumns = 25;
 
 function Board() {
+  const [running, setRunning] = useState(false);
+  const runningRef = useRef(running);
   const [grid, setGrid ] = useState(() => {
      const rows = [];
      for(let i=0; i<numberOfRows; i++) {
@@ -12,12 +14,19 @@ function Board() {
      }
      return rows;
   })
+  const runSimulation = useCallback(() =>{
+    // if we are not running return 
+    if(!running) {
+      return;
+    }
+    setTimeout(runSimulation, 1000)
+  },[]);
   console.log(grid);
   return (
     <div className="container">
       <div className="buttons-container">
         <h1>Game of Life</h1>
-        <button>Start</button>
+        <button onClick={() => setRunning(!running)}>{running ? 'Stop': 'Start'}</button>
         <button>Stop</button>
         <button>Random</button>
         <button>Clear</button>
