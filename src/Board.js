@@ -15,11 +15,23 @@ const timeOptions = [
   { value: '5000', label:'5000' },
 ];
 
+const colorOptions = [
+  {value: '#FA8072', label: 'SALMON'},
+  {value: '#FF0000', label: 'RED'},
+  {value: '#008000', label: 'GREEN'},
+  {value: '#0000FF', label: 'BLUE'},
+  {value: '#800080', label: 'PURPLE'},
+  {value: '#FF1493', label: 'PINK'},
+  {value: '#FF4500', label: 'ORANGE'},
+
+]
+
 function Board() { 
   const [running, setRunning] = useState(false);
   const [time, setTime] = useState(200);
   const [numberOfRows, setNumberOfRows] = useState(25);
   const [numberOfColumns, setNumberOfColumns] = useState(25);
+  const [color, setColor] = useState('black');
   const operations = [
     [0,1],
     [0,-1],
@@ -87,6 +99,10 @@ function Board() {
     console.log(`Option selected:`, time.value);
   };
 
+  const handleColor = (color) => {
+     setColor(color.value);
+  }
+
   console.log('Before click', running);
   console.log('time or speed', time);
   return (
@@ -98,6 +114,12 @@ function Board() {
           label="choose speed"
           onChange={handleTime}
           options={timeOptions}
+        />
+        <Select
+          value={color}
+          defaultValue={colorOptions[1]}
+          onChange={handleColor}
+          options={colorOptions}
         />
       </div>
       <div className="buttons-container">
@@ -141,7 +163,7 @@ function Board() {
               style={{
                 width:20, 
                 height:20, 
-                backgroundColor: grid[rowIndex][columnIndex] ? 'black' : undefined, 
+                backgroundColor: grid[rowIndex][columnIndex] ? color : undefined, 
                 border: '1px solid gray'
               }}
             />
