@@ -6,6 +6,7 @@ const numberOfColumns = 25;
 
 
 function Board() { 
+  const [running, setRunning] = useState(false);
   const operations = [
     [0,1],
     [0,-1],
@@ -25,18 +26,19 @@ function Board() {
     return rows;
   }
   
+ 
+  const [grid, setGrid ] = useState(() => generateEmptyGrid());
   const getRandom = () => {
     const rows = [];
     for(let i=0; i<numberOfRows; i++) {
-       rows.push(Array.from(Array(numberOfColumns), () => (Math.random() > 0.65 ? 1 : 0)))
+      rows.push(Array.from(Array(numberOfColumns), () => (Math.random() > 0.7 ? 1 : 0)))
     };
     setGrid(rows);
   }
-  const [grid, setGrid ] = useState(() => generateEmptyGrid());
-  const [running, setRunning] = useState(false);
   const runningRef = useRef(running);
   const runSimulation = useCallback(() =>{
     // if we are not running return 
+    console.log('isApp running>>>>>>>>>>>', runningRef.current);
     if(!runningRef.current) {
       return;
     }
@@ -48,7 +50,7 @@ function Board() {
             operations.forEach(([x,y]) => {
                 const newI = i+x;
                 const newK = k+y;
-                if(newI >= 0 && newI < numberOfRows && newK>=0 && newK < numberOfColumns) {
+                if(newI >= 0 && newI < numberOfRows && newK >= 0 && newK < numberOfColumns) {
                       neighbors += g[newI][newK]
                 }
             });
@@ -62,25 +64,36 @@ function Board() {
       });
     });
     
-    setTimeout(runSimulation, 100)
-  },[]);
+    setTimeout(runSimulation, 500)
+  },[numberOfRows, numberOfColumns]);
 
-  console.log(grid);
+  console.log('Before click', running);
   return (
     <div className="container">
       <div className="buttons-container">
         <h1>Game of Life</h1>
         <button onClick={() => {
-           setRunning(!running);
-           if(!running) {
-            runningRef.current = true;
-            runSimulation();
-           }
-           }}
-        >{running ? 'Stop': 'Start'}</button>
-        <button>Stop</button>
+          setRunning(!running);
+          console.log('aFTER click', running);
+            if(!running) {
+              console.log('inside the if clause', running) 
+              console.log('inside the if block runningRef value-1', runningRef.current)
+              runningRef.current = !runningRef.current;
+              console.log('inside the if block runningRef value-2', runningRef.current)
+              runSimulation();
+            }
+        }}
+        >Start</button>
+        <button onClick={
+         () => {
+          setRunning(!running);
+          runningRef.current = !runningRef.current;
+         }
+        }>Stop</button>
         <button onClick={() => getRandom()}>Random</button>
         <button onClick={() => {
+            //  setRunning(!running)
+            //  runningRef.current = !runningRef.current;
              setGrid(generateEmptyGrid());
         }}>Clear</button>
       </div>
@@ -90,9 +103,8 @@ function Board() {
             return <div 
               onClick={() => {
                 const modifiedGrid = produce(grid, (singleGrid) => {
-                  singleGrid[rowIndex][columnIndex] = (singleGrid && singleGrid[rowIndex][columnIndex]) ? 0 : 1;
-                  
-                })
+                  singleGrid[rowIndex][columnIndex] = (singleGrid[rowIndex][columnIndex]) ? 0 : 1;                  
+                });
                 setGrid(modifiedGrid)
               }}
               key={`${rowIndex}-${columnIndex}`}
@@ -102,7 +114,6 @@ function Board() {
                 backgroundColor: grid[rowIndex][columnIndex] ? 'black' : undefined, 
                 border: '1px solid gray'
               }}
-
             />
         }))}
       </div>
@@ -110,4 +121,4 @@ function Board() {
   )
 };
 
-export default Board
+export default Board;
