@@ -33,6 +33,7 @@ function Board() {
   const [numberOfRows, setNumberOfRows] = useState(25);
   const [numberOfColumns, setNumberOfColumns] = useState(25);
   const [color, setColor] = useState('black');
+  const [count, setCount] = useState({countVal:0});
   const operations = [
     [0,1],
     [0,-1],
@@ -62,6 +63,10 @@ function Board() {
     setGrid(rows);
   }
   const runningRef = useRef(running);
+  const increament = () => {
+      const newVal = count[0]+1;
+      setCount([newVal]);
+  }
   const runSimulation = useCallback(() =>{
     // if we are not running return 
     console.log('isApp running>>>>>>>>>>>', runningRef.current);
@@ -70,6 +75,7 @@ function Board() {
     }
     setGrid((g) => {
       return produce(g, gridCopy => {
+        // setTimeout(increament, parseInt(time))
         for(let i=0; i<numberOfRows; i++) {
           for(let k=0; k<numberOfColumns; k++) {
             let neighbors = 0;
@@ -90,6 +96,7 @@ function Board() {
       });
     });
     console.log('time>>>>>>>>>>>>>',time, typeof(time));
+    setCount({...count, countVal: count.countVal++})
     setTimeout(runSimulation, parseInt(time))
   },[numberOfRows, numberOfColumns,time]);
 
@@ -104,12 +111,14 @@ function Board() {
      setColor(color.value);
   }
 
-  console.log('Before click', running);
-  console.log('time or speed', time);
+  console.log('time or speed', count.countVal);
   return (
     <React.Fragment>
      <Link exact to="/">Home</Link>
      <Link to="/about">About</Link>
+     <div>
+       <h1>Generation:{count.countVal}</h1>
+     </div>
      <div className="select-options">
         <Select
           value={parseInt(time)}
@@ -154,6 +163,8 @@ function Board() {
             //  setRunning(!running)
             //  runningRef.current = !runningRef.current;
              setGrid(generateEmptyGrid());
+             setCount({ countVal:0})
+             window.location.reload();
         }}>Clear</button>
       </div>
       <div className="grid-show">
