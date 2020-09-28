@@ -125,13 +125,14 @@ function Board() {
       <div className="buttons-container">
         <h1>Game of Life</h1>
         <button onClick={() => {
+          if(running) return;
           setRunning(!running);
-          console.log('aFTER click', running);
+          // console.log('aFTER click', running);
             if(!running) {
-              console.log('inside the if clause', running) 
-              console.log('inside the if block runningRef value-1', runningRef.current)
+              // console.log('inside the if clause', running) 
+              // console.log('inside the if block runningRef value-1', runningRef.current)
               runningRef.current = !runningRef.current;
-              console.log('inside the if block runningRef value-2', runningRef.current)
+              // console.log('inside the if block runningRef value-2', runningRef.current)
               runSimulation();
             }
         }}
@@ -153,7 +154,7 @@ function Board() {
         {grid.map((rows, rowIndex) => 
           rows.map((column, columnIndex) =>{
             return <div 
-              onClick={() => {
+              onClick={running ? () => {return;} : () => {
                 const modifiedGrid = produce(grid, (singleGrid) => {
                   singleGrid[rowIndex][columnIndex] = (singleGrid[rowIndex][columnIndex]) ? 0 : 1;                  
                 });
