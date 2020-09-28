@@ -1,12 +1,16 @@
 import React from 'react';
-import './Board';
-import './App.css';
+import {BrowserRouter as Router, Route } from 'react-router-dom';
 import Board from './Board';
+import About from './About';
+import './App.css';
 
 function App() {
   return (
     <div className="body">
-      <Board />
+    <Router>
+      <Route exact path="/" component={Board} />
+      <Route path="/about" component={About} />
+    </Router>  
     </div>
   )
 }

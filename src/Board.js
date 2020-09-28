@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import produce from 'immer';
 
@@ -106,22 +107,27 @@ function Board() {
   console.log('Before click', running);
   console.log('time or speed', time);
   return (
-    <div className="container">
-      <div className="select-options">
+    <React.Fragment>
+     <Link exact to="/">Home</Link>
+     <Link to="/about">About</Link>
+     <div className="select-options">
         <Select
           value={parseInt(time)}
           defaultValue={timeOptions[2]}
           label="choose speed"
           onChange={handleTime}
           options={timeOptions}
+          placeholder="Choose speed"
         />
         <Select
           value={color}
           defaultValue={colorOptions[1]}
           onChange={handleColor}
           options={colorOptions}
+          placeholder="Choose color"
         />
       </div>
+    <div className="container">     
       <div className="buttons-container">
         <h1>Game of Life</h1>
         <button onClick={() => {
@@ -171,6 +177,7 @@ function Board() {
         }))}
       </div>
     </div>
+    </React.Fragment>
   )
 };
 
